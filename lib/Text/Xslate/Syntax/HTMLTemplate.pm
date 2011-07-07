@@ -5,7 +5,7 @@ use 5.008_001;
 use strict;
 use warnings FATAL => 'recursion';
 
-our $VERSION = '0.1002';
+our $VERSION = '0.1003';
 
 use Any::Moose;
 
@@ -205,6 +205,12 @@ has loop_depth => (
     default => 0,
 );
 
+has is_escaped_var => (
+    is => 'rw',
+    isa => 'CodeRef',
+    default => sub { sub {0;} },
+);
+
 has op_to_type_table => (
     is => 'rw',
     isa => 'HashRef',
@@ -285,7 +291,15 @@ sub convert_tmpl_var {
 
     my $expr = $self->convert_name_or_expr($node->name_or_expr);
 
+    my $do_mark_raw = 0;
     if(defined $node->{escape} and $node->{escape} eq '0'){
+        $do_mark_raw = 1;
+    }
+    if($node->name_or_expr->[0] eq 'name' and $self->is_escaped_var->($node->name_or_expr->[1]->[1])){
+        $do_mark_raw = 1;
+    }
+
+    if($do_mark_raw){
         $expr = $self->generate_call('mark_raw', [ $expr ]);
     }
     $self->generate_print($expr);
@@ -697,6 +711,12 @@ HTML::Template treats empty array referense as Flase.
 But Xslate treats empty array referense as True.
 when use_has_value is seted, Syntax::HTMLTemplate
 you have to register function to handle that.
+
+=item C<is_escaped_var>
+
+Method that determine var is escaped or not.
+For temporary use while migration.
+You should use Text::Xslate::mark_raw().
 
 =back
 
