@@ -5,7 +5,7 @@ use 5.008_001;
 use strict;
 use warnings FATAL => 'recursion';
 
-our $VERSION = '0.1004';
+our $VERSION = '0.1005';
 
 use Any::Moose;
 
@@ -13,6 +13,22 @@ extends qw(Text::Xslate::Parser);
 
 use HTML::Template::Parser;
 use Text::Xslate::Symbol;
+
+our %htp_compatible_function = (
+    sin     => sub { sprintf("%f", sin @_); },
+    cos     => sub { sprintf("%f", cos @_); },
+    atan    => sub { sprintf("%f", atan2($_[0], $_[1])/2); },
+    log     => sub { sprintf("%f", log @_); },
+    exp     => sub { sprintf("%f", exp @_); },
+    sqrt    => sub { sprintf("%f", sqrt @_); },
+    atan2   => sub { sprintf("%f", atan2($_[0], $_[1])); },
+    abs     => sub { sprintf("%f", abs @_); },
+    defined => sub { defined $_[0]; },
+    int     => sub { int($_[0]); },
+    hex     => sub { hex($_[0]); },
+    length  => sub { length($_[0]); },
+    oct     => sub { oct($_[0]); },
+);
 
 sub install_Xslate_as_HTMLTemplate {
     package Text::Xslate::Syntax::HTMLTemplate::_delegate;

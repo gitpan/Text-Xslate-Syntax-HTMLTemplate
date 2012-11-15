@@ -25,11 +25,16 @@ t/020_render/003_expr.t
 t/020_render/004_if.t
 t/020_render/005_for.t
 t/020_render/006_include.t
-t/020_render/007_esape.t
+t/020_render/007_escape.t
 t/020_render/008_global_vars.t
 t/020_render/009_has_value.t
 t/020_render/010_loop_context_vars.t
+t/020_render/011_path_like_variable_scope.t
+t/020_render/012_is_escaped_var.t
+t/020_render/013_htp_builtin_function.t
+t/030_filter/001_simple_filter.t
 t/900_bug/001_loop_and_include.t
+t/900_bug/002_if_x_==_0.t
 t/lib/Util.pm
 t/template/empty.tx
 t/template/x.tx
